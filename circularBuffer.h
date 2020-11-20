@@ -7,7 +7,7 @@
 #include <semaphore.h>
 
 #define SHM_NAME "/graphresult"
-#define BUFFER_SIZE (200)
+#define BUFFER_SIZE (50)
 #define EDGE_COUNT (8)
 #define USED_SEM "/fb_arc_set_used_sem"
 #define FREE_SEM "/fb_arc_set_free_sem"

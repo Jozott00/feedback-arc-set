@@ -97,7 +97,7 @@ void setup_supervisor(void)
 void setup_generator(void)
 {
 
-    int shmfd = shm_open(SHM_NAME, O_RDWR, 0060);
+    int shmfd = shm_open(SHM_NAME, O_RDWR, 0600);
     if (shmfd == -1)
         error_exit(cb_name, __LINE__, "Could not open shared memory", 1);
 
