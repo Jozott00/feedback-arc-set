@@ -18,11 +18,12 @@
 #include <semaphore.h>
 #include <errno.h>
 #include <string.h>
+#include <signal.h>
 
 #include "circularBuffer.h"
 
 static const char *sup_name = "supervisor.c"; /**< global name of the program file (set for erro messages). */
-extern volatile __sig_atomic_t quit;          /**< is set extern(in circularBuffer.c) and indicates if process should end. */
+extern volatile sig_atomic_t quit;            /**< is set extern(in circularBuffer.c) and indicates if process should end. */
 
 /**
  * @brief Runs the process of supervisor
