@@ -1,6 +1,8 @@
+# Programm: Feedback Arc Set
+# Author: Johannes Zottele 11911133
+
 CC = gcc
 compile_flags = -std=c99 -pedantic -Wall -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_SCID_SOURCE -D_POSIX_C_SOURCE=200809L -g
-# compile_flags = -std=c99 -pedantic -Wall -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_SCID_SOURCE -g
 
 library_flags = -lrt -lpthread
 

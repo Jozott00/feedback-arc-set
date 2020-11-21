@@ -61,3 +61,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+circularBuffer.o
+generator.o
+generator
+supervisor.o
+supervisor

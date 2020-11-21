@@ -1,3 +1,15 @@
+/**
+ * @project: Feedback Arc Set
+ * @module circularBuffer
+ * @author Johannes Zottele 11911133
+ * @version 1.0
+ * @date 19.11.2020
+ * @section File Overview
+ * circularBuffer is responsible for the whole circular buffer management, including semaphores and
+ * shared memory. It contains also some general functions, such as error printing and exiting.
+ * It also takse care of cleaning up all semaphores and shared memory.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/mman.h>
@@ -14,9 +26,9 @@
 static char *cb_name = "circularBuffer.c";
 volatile sig_atomic_t quit = 0;
 
-static bool usem_set = false;
-static bool fsem_set = false;
-static bool msem_set = false;
+static bool usem_set = false; /**< true when USED_SEM is open. It says cleanup function wether USED_SEM should get closed or not */
+static bool fsem_set = false; /**< true when FREE_SEM is open. It says cleanup function wether FREE_SEM should get closed or not */
+static bool msem_set = false; /**< true when MUTEX_SEM is open. It says cleanup function wether MUTEX_SEM should get closed or not */
 
 void error_msg(char *program, int line, char *msg, int with_errno)
 {
@@ -39,19 +51,9 @@ void success_exit(char *program)
     exit(EXIT_SUCCESS);
 }
 
-void handle_seg_signal(int signal)
-{
-    error_msg(cb_name, __LINE__, "Segementation fault! Fix that!", 0);
-    clean_up("supervisor.c");
-    _exit(1);
-}
-
 void handle_signal(int signal)
 {
-    if (signal == SIGSEGV)
-        handle_seg_signal(signal);
-    else
-        quit = 1;
+    quit = 1;
 }
 
 void setup_signal(void)
@@ -61,7 +63,6 @@ void setup_signal(void)
     sa.sa_handler = handle_signal;
     sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
-    sigaction(SIGSEGV, &sa, NULL);
 }
 
 void setup_supervisor(void)
@@ -142,7 +143,7 @@ void print_solution(const char *prog, arcset *set)
 void clean_up(char *progn)
 {
 
-    printf("INFO: cleaning up shm and sem...\n\n");
+    printf("\nINFO: cleaning up shm and sem...\n\n");
 
     if (munmap(shm, sizeof(shm)) == -1)
         error_exit(cb_name, __LINE__, "Could not close mapping", 1);
@@ -218,7 +219,12 @@ int read_delete_set(arcset *set)
 
 int set_status(int state)
 {
+
+    sem_wait(mutex_sem);
+
     shm->status = state;
+
+    sem_post(mutex_sem);
 
     return 0;
 }
