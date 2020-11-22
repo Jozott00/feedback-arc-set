@@ -126,6 +126,8 @@ static int gen_set(arcset *set, size_t len, edge *graph, size_t max_node)
         }
     }
 
+    free(perm);
+
     set->size = add_i;
 
     return 0;
@@ -209,17 +211,20 @@ int main(int argc, char const *argv[])
 
     setup_generator();
 
+    arcset *set = malloc(sizeof(arcset));
     while (quit != 1)
     {
         if (get_status() == 1)
             break;
 
-        arcset *set = malloc(sizeof(arcset));
         if (gen_set(set, len, graph, maxNode) == -1)
             continue;
 
         write_set(*set);
     }
+
+    free(graph);
+    free(set);
 
     printf("\nDanke und auf Wiedersehen!\n\n");
     success_exit((char *)gen_name);

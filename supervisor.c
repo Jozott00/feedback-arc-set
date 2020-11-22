@@ -63,6 +63,7 @@ int main(int argc, char const *argv[])
         }
     }
 
+    free(set);
     set_status(1);                  /* set status to 1 so all generate know that process is ended */
     success_exit((char *)sup_name); /* exit with success and clean up before leaving */
 
